@@ -5,9 +5,10 @@
 # An example controller showing a sample home page
 GET     /contact                           controllers.ContactController.index
 POST    /contact                           controllers.ContactController.createContact
-GET     /contact/:id                       controllers.ContactController.getContactById(id: Integer)
-PUT     /contact/:id                       controllers.ContactController.updateContact(id: Integer)
+PUT     /contact                           controllers.ContactController.updateContact
 DELETE  /contact/:id                       controllers.ContactController.deleteContact(id: Integer)
+
+GET     /contact/:id                       controllers.ContactController.getContactById(id: Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
