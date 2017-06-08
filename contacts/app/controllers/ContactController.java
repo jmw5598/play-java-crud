@@ -1,41 +1,47 @@
 package controllers;
 
+import javax.inject.Inject;
+import com.fasterxml.jackson.databind.JsonNode;
 import play.mvc.*;
 import play.libs.Json;
-
+import service.ContactService;
+import model.Contact;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
  */
 public class ContactController extends Controller {
 
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
+    private ContactService contactService;
+
+    @Inject()
+    public ContactController(ContactService contactService) {
+      this.contactService = contactService;
+    }
+
     public Result index() {
-        return ok(Json.toJson("returning all contacts"));
+        return ok(Json.toJson(contactService.findAll()));
     }
 
     public Result createContact() {
-      System.out.println("created contact");
-      return ok(Json.toJson("created new contact"));
+      JsonNode json = request().body().asJson();
+      Contact contact = contactService.add(Json.fromJson(json, Contact.class));
+      return ok(Json.toJson(contact));
     }
 
     public Result getContactById(Integer id) {
-      return ok(Json.toJson("retuing contact with id: " + id));
+      return ok(Json.toJson(contactService.findById(id)));
     }
 
-    public Result updateContact(Integer id) {
-      System.out.println("updated contact");
-      return ok(Json.toJson("updated contact"));
+    public Result updateContact() {
+      JsonNode json = request().body().asJson();
+      Contact contact = contactService.update(Json.fromJson(json, Contact.class));
+      return ok(Json.toJson(contact));
     }
 
     public Result deleteContact(Integer id) {
-      System.out.println("deleted contact");
-      return ok(Json.toJson("deleted contact"));
+      Contact contact = contactService.remove(id);
+      return ok(Json.toJson(contact));
     }
 
 }
